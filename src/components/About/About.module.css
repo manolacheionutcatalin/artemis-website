@@ -1,0 +1,273 @@
+/* ============================================
+   About Section — "Despre Mine"
+   ============================================ */
+
+.about {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3xl) var(--space-md) var(--space-4xl);
+  overflow: hidden;
+}
+
+/* ── Decorative Separator ── */
+.separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.separatorDot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--color-accent-warm);
+  opacity: 0.5;
+  box-shadow: 0 0 12px rgba(196, 168, 130, 0.25);
+}
+
+/* ── Section Label ── */
+.sectionLabel {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-warm);
+  opacity: 0;
+  margin-bottom: var(--space-sm);
+  transition: opacity 0.8s var(--ease-gentle), transform 0.8s var(--ease-out-expo);
+  transform: translateY(16px);
+}
+
+.visible .sectionLabel {
+  opacity: 0.7;
+  transform: translateY(0);
+}
+
+/* ── Heading ── */
+.heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.4;
+  color: var(--color-text-primary);
+  text-align: center;
+  max-width: 600px;
+  margin-bottom: var(--space-3xl);
+  opacity: 0;
+  transition: opacity 1s var(--ease-gentle) 0.15s, transform 1s var(--ease-out-expo) 0.15s;
+  transform: translateY(20px);
+}
+
+.visible .heading {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Two-Column Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3xl);
+  max-width: 1040px;
+  width: 100%;
+  align-items: start;
+}
+
+/* ── Portrait Column ── */
+.portraitCol {
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-gentle) 0.3s, transform 1.2s var(--ease-out-expo) 0.3s;
+  transform: translateX(-30px);
+}
+
+.visible .portraitCol {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.portraitWrapper {
+  position: relative;
+  max-width: 380px;
+  width: 100%;
+}
+
+.portrait {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  filter: contrast(1.02) brightness(0.95);
+  transition: filter var(--duration-medium) var(--ease-gentle);
+}
+
+.portraitWrapper:hover .portrait {
+  filter: contrast(1.05) brightness(1);
+}
+
+.portraitGlow {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(196, 168, 130, 0.07) 0%,
+    transparent 65%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ── Text Column ── */
+.textCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-gentle) 0.5s, transform 1.2s var(--ease-out-expo) 0.5s;
+  transform: translateX(30px);
+}
+
+.visible .textCol {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.intro {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.8;
+  color: var(--color-accent-warm);
+}
+
+.intro strong {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.paragraph {
+  font-family: var(--font-body);
+  font-size: clamp(0.88rem, 1.2vw, 0.98rem);
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  line-height: 1.9;
+}
+
+.paragraph strong {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* ── Credential Badges ── */
+.badges {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.badge {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  transition:
+    border-color var(--duration-medium) var(--ease-gentle),
+    background-color var(--duration-medium) var(--ease-gentle),
+    transform var(--duration-fast) var(--ease-gentle);
+}
+
+.badge:hover {
+  border-color: var(--color-border-visible);
+  background: var(--color-bg-elevated);
+  transform: translateY(-2px);
+}
+
+.badgeIcon {
+  color: var(--color-accent-warm);
+  font-size: 0.7rem;
+  line-height: 2.2;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.badgeTitle {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-text-primary);
+}
+
+.badgeDetail {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+    max-width: 560px;
+  }
+
+  .portraitCol {
+    order: -1;
+    transform: translateY(20px);
+  }
+
+  .visible .portraitCol {
+    transform: translateY(0);
+  }
+
+  .textCol {
+    transform: translateY(20px);
+  }
+
+  .visible .textCol {
+    transform: translateY(0);
+  }
+
+  .portraitWrapper {
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about {
+    padding: var(--space-2xl) var(--space-sm) var(--space-3xl);
+  }
+
+  .badges {
+    gap: var(--space-xs);
+  }
+
+  .badge {
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .portraitWrapper {
+    max-width: 280px;
+  }
+}

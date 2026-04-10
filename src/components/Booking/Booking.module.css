@@ -1,0 +1,98 @@
+/* ============================================
+   Booking Section — Placeholder Target
+   ============================================ */
+
+.booking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--space-3xl) var(--space-md);
+  text-align: center;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.bookingContent {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.bookingLabel {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-warm);
+  opacity: 0.7;
+}
+
+.bookingHeading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.4;
+  color: var(--color-text-primary);
+}
+
+.bookingText {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+}
+
+.bookingButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+  padding: 16px 40px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--color-bg-deep);
+  background: var(--color-accent-warm);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-medium) var(--ease-gentle),
+    transform var(--duration-fast) var(--ease-gentle),
+    box-shadow var(--duration-medium) var(--ease-gentle);
+}
+
+.bookingButton:hover {
+  background-color: var(--color-accent-warm-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(196, 168, 130, 0.2);
+}
+
+.bookingButton:active {
+  transform: translateY(0);
+}
+
+.bookingButton:focus-visible {
+  outline: 2px solid var(--color-accent-warm);
+  outline-offset: 3px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .booking {
+    padding: var(--space-2xl) var(--space-sm);
+  }
+  .bookingButton {
+    padding: 14px 28px;
+    width: 100%;
+    justify-content: center;
+  }
+}

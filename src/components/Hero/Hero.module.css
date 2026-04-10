@@ -1,0 +1,256 @@
+/* ============================================
+   Hero Section — Breathing Space
+   ============================================ */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ── Ambient Background Glow ── */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 700px;
+  height: 700px;
+  transform: translate(-50%, -55%);
+  background: radial-gradient(
+    circle,
+    rgba(196, 168, 130, 0.06) 0%,
+    rgba(196, 168, 130, 0.02) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  animation: breatheGlow 8s var(--ease-gentle) infinite;
+}
+
+@keyframes breatheGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -55%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -55%) scale(1.15);
+  }
+}
+
+/* ── Content Container ── */
+.heroContent {
+  max-width: 680px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xl);
+}
+
+/* ── Breathing Indicator (subtle pulsing dot) ── */
+.breatheIndicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-accent-warm);
+  opacity: 0;
+  animation: fadeInSlow 2s var(--ease-gentle) 0.3s forwards,
+             breathePulse 4s var(--ease-gentle) 2.3s infinite;
+}
+
+@keyframes breathePulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(196, 168, 130, 0.3);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.8);
+    box-shadow: 0 0 20px 4px rgba(196, 168, 130, 0.1);
+  }
+}
+
+/* ── Main Heading ── */
+.heroHeading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  opacity: 0;
+  animation: fadeInRise 2s var(--ease-out-expo) 0.8s forwards;
+}
+
+.heroHeadingAccent {
+  display: block;
+  margin-top: var(--space-sm);
+  font-style: italic;
+  color: var(--color-accent-warm);
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  opacity: 0;
+  animation: fadeInRise 2s var(--ease-out-expo) 1.8s forwards;
+}
+
+/* ── Subtext ── */
+.heroSubtext {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  line-height: 1.9;
+  max-width: 480px;
+  opacity: 0;
+  animation: fadeInRise 1.8s var(--ease-out-expo) 2.8s forwards;
+}
+
+/* ── CTA Button ── */
+.heroCta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 14px 32px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-accent-warm);
+  background: transparent;
+  border: 1px solid var(--color-border-visible);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-medium) var(--ease-gentle),
+    border-color var(--duration-medium) var(--ease-gentle),
+    color var(--duration-medium) var(--ease-gentle),
+    box-shadow var(--duration-medium) var(--ease-gentle),
+    transform var(--duration-fast) var(--ease-gentle);
+  opacity: 0;
+  animation: fadeInRise 1.8s var(--ease-out-expo) 3.6s forwards;
+}
+
+.heroCta:hover {
+  background-color: var(--color-accent-glow);
+  border-color: var(--color-accent-warm);
+  color: var(--color-accent-warm-hover);
+  box-shadow: 0 0 30px rgba(196, 168, 130, 0.08);
+  transform: translateY(-1px);
+}
+
+.heroCta:active {
+  transform: translateY(0);
+}
+
+.heroCta:focus-visible {
+  outline: 2px solid var(--color-accent-warm);
+  outline-offset: 3px;
+}
+
+.ctaArrow {
+  display: inline-block;
+  transition: transform var(--duration-medium) var(--ease-out-expo);
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+.heroCta:hover .ctaArrow {
+  transform: translateX(3px);
+}
+
+/* ── Scroll Hint ── */
+.scrollHint {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  opacity: 0;
+  animation: fadeInSlow 2s var(--ease-gentle) 4.5s forwards;
+}
+
+.scrollHintLine {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent-warm),
+    transparent
+  );
+  animation: scrollLineFlow 2.5s var(--ease-gentle) infinite;
+}
+
+@keyframes scrollLineFlow {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    opacity: 0.5;
+    transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+
+/* ── Shared Keyframes ── */
+@keyframes fadeInRise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInSlow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .heroContent {
+    gap: var(--space-xl);
+  }
+
+  .heroCta {
+    padding: 12px 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: var(--space-lg) var(--space-sm);
+  }
+
+  .heroContent {
+    gap: var(--space-lg);
+  }
+}
