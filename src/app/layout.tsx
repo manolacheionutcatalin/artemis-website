@@ -4,9 +4,9 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
-  title: "Artemis — Consiliere Psihologică cu tehnici CBT",
+  title: "Psih. Cătălin Manolache — Consiliere Psihologică CBT",
   description:
-    "Respiră, împământează-te. Artemis te ghidează prin consiliere psihologică cu tehnici cognitiv-comportamentale integrate pentru a gestiona anxietatea și a reconstrui echilibrul emoțional.",
+    "Respiră, împământează-te. Te ghidez prin consiliere psihologică cu tehnici cognitiv-comportamentale integrate pentru a gestiona anxietatea și a reconstrui echilibrul emoțional.",
   keywords: [
     "consiliere psihologică",
     "tehnici cognitiv-comportamentale",

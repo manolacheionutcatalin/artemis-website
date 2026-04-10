@@ -27,7 +27,7 @@ export default function Header() {
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ""}`}>
       <div className={styles.navContainer}>
         <Link href="/#hero" className={styles.logo}>
-          Artemis.
+          Psih. Cătălin Manolache
         </Link>
         
         <nav className={`${styles.nav} ${isMobileMenuOpen ? styles.mobileOpen : ""}`}>

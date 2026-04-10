@@ -7,7 +7,7 @@ export default function TermeniSiConditii() {
       
       <div style={{ color: "var(--color-text-secondary)", lineHeight: "1.8", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
         <p>
-          Bine ați venit pe site-ul <strong>Artemis Therapy</strong>. Utilizarea acestui site este supusă următoarelor Termeni și Condiții. Prin accesarea și navigarea pe acest website, sunteți de acord cu acești termeni.
+          Bine ați venit pe site-ul <strong>Cabinetului Individual de Psihologie Cătălin Manolache</strong>. Utilizarea acestui site este supusă următoarelor Termeni și Condiții. Prin accesarea și navigarea pe acest website, sunteți de acord cu acești termeni.
         </p>
 
         <section>

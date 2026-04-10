@@ -10,7 +10,7 @@ export default function Footer() {
         <div className={styles.topSection}>
           <div className={styles.brandInfo}>
             <Link href="/#hero" className={styles.logo}>
-              Artemis.
+              Psih. Cătălin Manolache
             </Link>
             <p className={styles.tagline}>
               Consiliere psihologică și terapie cognitiv-comportamentală. 
@@ -59,7 +59,7 @@ export default function Footer() {
 
         <div className={styles.bottomSection}>
           <p className={styles.copyright}>
-            &copy; {currentYear} Artemis Therapy. Toate drepturile rezervate.
+            &copy; {currentYear} Psih. Cătălin Manolache. Toate drepturile rezervate.
           </p>
           <div className={styles.legalLinks}>
             <Link href="/termeni" className={styles.link}>Termeni și condiții</Link>
