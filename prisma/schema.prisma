@@ -1,0 +1,101 @@
+// ============================================
+// Prisma Schema — Admin Dashboard
+// Database: SQLite (local dev)
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── Admin ──────────────────────────────────────
+// Stochează conturile de administrare.
+// passwordHash: hash-ul Bcrypt al parolei (nu se stochează niciodată în clar).
+// twoFactorSecret: cheia TOTP pentru 2FA (Google Authenticator / Authy).
+// twoFactorEnabled: flag care indică dacă 2FA este activat.
+
+model Admin {
+  id               String   @id @default(cuid())
+  email            String   @unique
+  name             String
+  passwordHash     String
+  role             String   @default("admin")
+
+  // 2FA (Two-Factor Authentication)
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean  @default(false)
+
+  // Metadata
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  lastLoginAt      DateTime?
+
+  // Relații
+  auditLogs        AuditLog[]
+}
+
+// ── AuditLog ───────────────────────────────────
+// Jurnalizează fiecare acțiune relevantă din dashboard.
+// action: tipul acțiunii (LOGIN, LOGOUT, CREATE, UPDATE, DELETE, etc.)
+// target: resursa afectată (ex: "user:123", "settings", etc.)
+// metadata: detalii suplimentare în format JSON (opțional).
+// ipAddress: IP-ul de la care s-a efectuat acțiunea.
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  target    String?
+  metadata  String?  // JSON string — SQLite nu are tip JSON nativ
+  ipAddress String?
+
+  // Cine a efectuat acțiunea
+  adminId   String
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  // Când
+  createdAt DateTime @default(now())
+}
+
+// ── Analytics ──────────────────────────────────
+// Urmărire trafic pentru vizitatorii site-ului Artemis
+
+model PageView {
+  id        String   @id @default(uuid())
+  url       String
+  referrer  String?
+  device    String?
+  
+  createdAt DateTime @default(now())
+
+  // Indici pentru a grăbi viitoarele interogări pe bază de timp
+  @@index([createdAt])
+}
+
+model AnalyticsSummary {
+  id          String   @id @default(uuid())
+  date        DateTime @unique // Reprezintă ziua calendaristică pt agregare (ex: 2026-04-19 00:00:00)
+  totalViews  Int      @default(0)
+  desktopViews Int     @default(0)
+  mobileViews  Int     @default(0)
+  
+  updatedAt   DateTime @updatedAt
+}
+
+// ── Conversions ────────────────────────────────
+// Urmărire evenimente de conversie pe site
+
+model ConversionEvent {
+  id        String   @id @default(uuid())
+  type      String   // ex: 'CALENDLY_CLICK'
+  path      String   // pagina de unde s-a dat click
+  
+  createdAt DateTime @default(now())
+
+  // Index opțional pe tipul conversiei și dată pentru optimizare
+  @@index([createdAt])
+  @@index([type])
+}

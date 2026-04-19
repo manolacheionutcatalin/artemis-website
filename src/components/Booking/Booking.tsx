@@ -1,20 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { PopupButton } from "react-calendly";
 import styles from "./Booking.module.css";
 
+const CALENDLY_URL = "https://calendly.com/manolache-ionut-catalin/sedinta-de-consiliere";
+
 export default function Booking() {
-  const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    // Ne asigurăm că setăm elementul rădăcină doar pe client
-    // Astfel evităm erori de tipul "document is not defined" în timpul Server Side Rendering-ului.
-    if (typeof document !== "undefined") {
-      setRootElement(document.body);
-    }
-  }, []);
-
   return (
     <section
       id="programare"
@@ -34,18 +24,14 @@ export default function Booking() {
           noastră rămâne în deplină confidențialitate.
         </p>
 
-        {rootElement ? (
-          <PopupButton
-            url="https://calendly.com/manolache-ionut-catalin"
-            rootElement={rootElement}
-            text="Programează o ședință"
-            className={styles.bookingButton}
-          />
-        ) : (
-          <button className={styles.bookingButton} disabled style={{ opacity: 0.7, cursor: "wait" }}>
-            Se încarcă...
-          </button>
-        )}
+        <a
+          href={CALENDLY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.bookingButton}
+        >
+          Programează o ședință
+        </a>
       </div>
     </section>
   );

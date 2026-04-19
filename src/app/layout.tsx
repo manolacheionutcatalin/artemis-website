@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "Psih. Cătălin Manolache — Consiliere Psihologică CBT",
@@ -25,9 +23,7 @@ export default function RootLayout({
   return (
     <html lang="ro">
       <body>
-        <Header />
         {children}
-        <Footer />
       </body>
     </html>
   );
