@@ -118,41 +118,24 @@ export default async function PublicPostPage({ params }: PublicPostPageProps) {
   };
 
   return (
-    <div style={{ backgroundColor: "var(--color-bg-deep)", minHeight: "100vh", paddingBottom: "var(--space-3xl)" }}>
-      {/* ── Navigatie Superioara ── */}
-      <nav style={{
-        maxWidth: "850px",
-        margin: "0 auto",
-        padding: "1.5rem var(--space-sm)",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}>
-        <Link href="/" style={{
-          fontFamily: "var(--font-display)",
-          color: "var(--color-accent-warm)",
-          fontSize: "1.4rem",
-          fontWeight: "bold",
-          textDecoration: "none",
-        }}>
-          Cătălin Manolache
-        </Link>
+    <div style={{ backgroundColor: "var(--color-bg-deep)", minHeight: "100vh", paddingBottom: "var(--space-3xl)", paddingTop: "120px" }}>
+      {/* ── Corp Articol ── */}
+      <main style={{ maxWidth: "850px", margin: "0 auto", padding: "0 var(--space-sm)" }}>
+        
+        {/* Link înapoi la articole */}
         <Link href="/blog" style={{
-          color: "var(--color-text-secondary)",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.55rem",
+          color: "var(--color-accent-warm)",
           textDecoration: "none",
           fontSize: "0.95rem",
-          fontWeight: "500",
-          border: "1px solid var(--color-border-subtle)",
-          padding: "0.5rem 1.2rem",
-          borderRadius: "var(--radius-full)",
-          transition: "all var(--duration-fast)",
+          fontWeight: "600",
+          marginBottom: "2rem",
+          transition: "opacity 0.2s"
         }}>
-          &larr; Înapoi la Blog
+          &larr; Înapoi la toate articolele
         </Link>
-      </nav>
-
-      {/* ── Corp Articol ── */}
-      <main style={{ maxWidth: "850px", margin: "var(--space-lg) auto 0 auto", padding: "0 var(--space-sm)" }}>
         
         {/* Imagine de Copertă Principală */}
         {post.coverImage && (

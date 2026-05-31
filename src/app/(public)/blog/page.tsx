@@ -17,39 +17,7 @@ export default async function PublicBlogPage() {
   });
 
   return (
-    <div style={{ backgroundColor: "var(--color-bg-deep)", minHeight: "100vh", paddingBottom: "var(--space-2xl)" }}>
-      {/* ── Navigatie Superioara ── */}
-      <nav style={{
-        maxWidth: "1100px",
-        margin: "0 auto",
-        padding: "1.5rem var(--space-sm)",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}>
-        <Link href="/" style={{
-          fontFamily: "var(--font-display)",
-          color: "var(--color-accent-warm)",
-          fontSize: "1.4rem",
-          fontWeight: "bold",
-          textDecoration: "none",
-          letterSpacing: "0.5px"
-        }}>
-          Cătălin Manolache
-        </Link>
-        <Link href="/" style={{
-          color: "var(--color-text-secondary)",
-          textDecoration: "none",
-          fontSize: "0.95rem",
-          fontWeight: "500",
-          border: "1px solid var(--color-border-subtle)",
-          padding: "0.5rem 1.2rem",
-          borderRadius: "var(--radius-full)",
-          transition: "all var(--duration-fast)",
-        }}>
-          &larr; Înapoi la Site
-        </Link>
-      </nav>
+    <div style={{ backgroundColor: "var(--color-bg-deep)", minHeight: "100vh", paddingBottom: "var(--space-2xl)", paddingTop: "120px" }}>
 
       {/* ── Antet Blog ── */}
       <header style={{
