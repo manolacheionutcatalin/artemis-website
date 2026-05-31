@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import SettingsForm from "./SettingsForm";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function SettingsPage() {
   const session = await getServerSession(authOptions);
 

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import LogoutButton from "./LogoutButton";
 import TrafficChart from "./TrafficChart";
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
