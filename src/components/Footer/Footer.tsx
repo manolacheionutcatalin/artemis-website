@@ -28,6 +28,9 @@ export default function Footer() {
                 <Link href="/#servicii" className={styles.link}>Servicii</Link>
               </li>
               <li>
+                <Link href="/blog" className={styles.link}>Blog</Link>
+              </li>
+              <li>
                 <Link href="/#faq" className={styles.link}>Întrebări Frecvente</Link>
               </li>
               <li>

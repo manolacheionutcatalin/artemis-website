@@ -20,7 +20,8 @@ export default function Header() {
     { name: "Acasă", href: "/#hero" },
     { name: "Despre Mine", href: "/#despre" },
     { name: "Servicii", href: "/#servicii" },
-    { name: "FAQ", href: "/#faq" },
+    { name: "Blog", href: "/blog" },
+    { name: "Întrebări", href: "/#faq" },
   ];
 
   return (
