@@ -1,6 +1,10 @@
 import styles from "./Hero.module.css";
 
-export default function Hero() {
+interface HeroProps {
+  heroMessage?: string;
+}
+
+export default function Hero({ heroMessage }: HeroProps) {
   return (
     <section id="hero" className={styles.hero} aria-label="Bun venit">
       <div className={styles.heroContent}>
@@ -17,8 +21,7 @@ export default function Hero() {
 
         {/* Supporting text */}
         <p className={styles.heroSubtext}>
-          Nu trebuie să înfrunți totul singur. Primul pas este doar să te oprești
-          o clipă — restul construim împreună, în ritmul tău.
+          {heroMessage || "Nu trebuie să înfrunți totul singur. Primul pas este doar să te oprești o clipă — restul construim împreună, în ritmul tău."}
         </p>
 
         {/* CTA */}

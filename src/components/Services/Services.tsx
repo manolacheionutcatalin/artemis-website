@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Services.module.css";
 
-const services = [
+interface ServicesProps {
+  sessionPrice?: string;
+}
+
+const defaultServices = [
   {
     icon: "◈",
     title: "Evaluare Clinică și Psihodiagnostic",
@@ -38,9 +42,19 @@ const services = [
   },
 ];
 
-export default function Services() {
+export default function Services({ sessionPrice }: ServicesProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+
+  // Injectăm prețul ședinței venit dinamic (dacă există)
+  const services = defaultServices.map(service => {
+    if (service.title === "Consiliere Psihologică pentru Adulți" && sessionPrice && service.prices) {
+      const updatedPrices = [...service.prices];
+      updatedPrices[0].value = sessionPrice;
+      return { ...service, prices: updatedPrices };
+    }
+    return service;
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(

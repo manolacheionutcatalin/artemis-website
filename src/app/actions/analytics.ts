@@ -45,3 +45,18 @@ export async function trackPageView(data: { url: string; referrer: string; devic
     return { success: false };
   }
 }
+
+export async function trackConversion(type: string, path: string) {
+  try {
+    await prisma.conversionEvent.create({
+      data: {
+        type,
+        path
+      }
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Eroare la salvarea conversiei:", error);
+    return { success: false };
+  }
+}

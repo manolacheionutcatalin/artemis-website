@@ -31,6 +31,18 @@ export default async function DashboardPage() {
     where: { date: today }
   });
 
+  const calendlyClicksToday = await prisma.conversionEvent.count({
+    where: {
+      type: "CALENDLY_CLICK",
+      createdAt: { gte: today }
+    }
+  });
+
+  const totalViewsForRate = todayStats?.totalViews || 0;
+  const conversionRate = totalViewsForRate > 0 
+    ? ((calendlyClicksToday / totalViewsForRate) * 100).toFixed(1) 
+    : "0.0";
+
   // --- TRAFIC SI GRAFICE ---
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setUTCHours(0, 0, 0, 0);
@@ -98,6 +110,16 @@ export default async function DashboardPage() {
         <div style={{ padding: "1.5rem", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)" }}>
           <h3 style={{ margin: "0 0 0.5rem 0", color: "#94a3b8", fontSize: "0.9rem" }}>Total Vizite (Azi)</h3>
           <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#f8fafc" }}>{todayStats?.totalViews || 0}</p>
+        </div>
+
+        <div style={{ padding: "1.5rem", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div>
+            <h3 style={{ margin: "0 0 0.5rem 0", color: "#94a3b8", fontSize: "0.9rem" }}>Intenții Programare</h3>
+            <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#34d399" }}>{calendlyClicksToday}</p>
+          </div>
+          <p style={{ margin: "0.5rem 0 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>
+            Conversie: <strong style={{ color: "#34d399" }}>{conversionRate}%</strong>
+          </p>
         </div>
         
         <div style={{ padding: "1.5rem", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)" }}>

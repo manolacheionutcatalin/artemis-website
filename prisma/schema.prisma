@@ -99,3 +99,12 @@ model ConversionEvent {
   @@index([createdAt])
   @@index([type])
 }
+
+// ── Setări Conținut ────────────────────────────
+// Păstrează setările și textele dinamice din site
+
+model SiteSettings {
+  key       String   @id // Ex: 'hero_message', 'session_price'
+  value     String   // Textul efectiv
+  updatedAt DateTime @updatedAt
+}

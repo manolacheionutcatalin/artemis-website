@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./Booking.module.css";
+import { trackConversion } from "@/app/actions/analytics";
 
 const CALENDLY_URL = "https://calendly.com/manolache-ionut-catalin/sedinta-de-consiliere";
 
@@ -29,6 +30,9 @@ export default function Booking() {
           target="_blank"
           rel="noopener noreferrer"
           className={styles.bookingButton}
+          onClick={() => {
+            trackConversion("CALENDLY_CLICK", window.location.pathname);
+          }}
         >
           Programează o ședință
         </a>
