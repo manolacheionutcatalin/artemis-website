@@ -29,7 +29,13 @@ export default function AdminLayout({
           <Link href="/dashboard" style={{ color: "#f8fafc", textDecoration: "none", fontWeight: "500", opacity: 0.9 }}>
             Pagina Principală
           </Link>
-          <Link href="/" target="_blank" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "0.95rem" }}>
+          <Link href="/dashboard/settings" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "0.95rem" }}>
+            Setări Conținut
+          </Link>
+          <Link href="/dashboard/password" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "0.95rem" }}>
+            Schimbă Parola
+          </Link>
+          <Link href="/" target="_blank" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "0.95rem", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "0.75rem", marginTop: "0.5rem" }}>
             Vizitează Site-ul ↗
           </Link>
         </nav>
