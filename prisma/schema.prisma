@@ -37,6 +37,7 @@ model Admin {
 
   // Relații
   auditLogs        AuditLog[]
+  blogPosts        BlogPost[]
 }
 
 // ── AuditLog ───────────────────────────────────
@@ -109,3 +110,29 @@ model SiteSettings {
   value     String   // Textul efectiv
   updatedAt DateTime @updatedAt
 }
+
+// ── Blog ───────────────────────────────────────
+// Articolele de blog scrise de administratori.
+// published: flag care indică dacă articolul este vizibil public.
+// excerpt: rezumat scurt afișat în liste.
+// content: textul integral al articolului (suportă Markdown).
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String   // textul complet
+  coverImage  String?  // link opțional imagine copertă
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Autorul
+  authorId    String
+  author      Admin    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([published])
+}
+

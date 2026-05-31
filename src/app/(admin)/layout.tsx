@@ -32,6 +32,9 @@ export default function AdminLayout({
           <Link href="/dashboard/settings" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "0.95rem" }}>
             Setări Conținut
           </Link>
+          <Link href="/dashboard/blog" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "0.95rem" }}>
+            Gestionare Blog
+          </Link>
           <Link href="/dashboard/password" style={{ color: "#94a3b8", textDecoration: "none", fontSize: "0.95rem" }}>
             Schimbă Parola
           </Link>
