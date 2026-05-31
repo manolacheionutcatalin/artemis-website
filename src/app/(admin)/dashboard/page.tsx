@@ -3,10 +3,11 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "./LogoutButton";
 import TrafficChart from "./TrafficChart";
+import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ range?: string }> }) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -18,6 +19,8 @@ export default async function DashboardPage() {
     );
   }
 
+  const { range = "30d" } = await searchParams;
+
   // Preia ultimele 10 log-uri din baza de date
   const logs = await prisma.auditLog.findMany({
     take: 10,
@@ -25,54 +28,110 @@ export default async function DashboardPage() {
     include: { admin: { select: { email: true } } },
   });
 
-  // Preia Analytics-ul de astăzi
-  const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+  // --- TRAFIC SI FILTRARE ---
+  let startDate = new Date();
+  startDate.setUTCHours(0, 0, 0, 0);
   
-  const todayStats = await prisma.analyticsSummary.findUnique({
-    where: { date: today }
-  });
+  let groupType: "day" | "month" = "day";
+  let daysToFetch = 30;
+  let rangeLabel = "30 Zile";
+  let chartTitle = "Trafic - Ultimele 30 de Zile";
 
-  const calendlyClicksToday = await prisma.conversionEvent.count({
-    where: {
-      type: "CALENDLY_CLICK",
-      createdAt: { gte: today }
+  if (range === "30d") {
+    startDate.setDate(startDate.getDate() - 29); // 30 zile incluzând azi
+    groupType = "day";
+    daysToFetch = 30;
+    rangeLabel = "30 Zile";
+    chartTitle = "Trafic - Ultimele 30 de Zile";
+  } else if (range === "6m") {
+    startDate.setMonth(startDate.getMonth() - 6);
+    startDate.setDate(1); // aliniere la început de lună
+    groupType = "month";
+    rangeLabel = "6 Luni";
+    chartTitle = "Trafic - Ultimele 6 Luni";
+  } else if (range === "all") {
+    const oldestRecord = await prisma.analyticsSummary.findFirst({
+      orderBy: { date: "asc" }
+    });
+    if (oldestRecord) {
+      startDate = new Date(oldestRecord.date);
+      startDate.setDate(1);
+    } else {
+      startDate.setMonth(startDate.getMonth() - 12);
+      startDate.setDate(1);
     }
-  });
+    groupType = "month";
+    rangeLabel = "Tot Istoricul";
+    chartTitle = "Trafic - Tot Istoricul";
+  }
 
-  const totalViewsForRate = todayStats?.totalViews || 0;
-  const conversionRate = totalViewsForRate > 0 
-    ? ((calendlyClicksToday / totalViewsForRate) * 100).toFixed(1) 
-    : "0.0";
-
-  // --- TRAFIC SI GRAFICE ---
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setUTCHours(0, 0, 0, 0);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-
+  // Preia datele agregate din interval
   const recentSummaries = await prisma.analyticsSummary.findMany({
-    where: { date: { gte: sevenDaysAgo } },
+    where: { date: { gte: startDate } },
     orderBy: { date: "asc" }
   });
 
+  const totalViews = recentSummaries.reduce((sum, s) => sum + s.totalViews, 0);
+  const desktopViews = recentSummaries.reduce((sum, s) => sum + s.desktopViews, 0);
+  const mobileViews = recentSummaries.reduce((sum, s) => sum + s.mobileViews, 0);
+
+  const calendlyClicks = await prisma.conversionEvent.count({
+    where: {
+      type: "CALENDLY_CLICK",
+      createdAt: { gte: startDate }
+    }
+  });
+
+  const conversionRate = totalViews > 0 
+    ? ((calendlyClicks / totalViews) * 100).toFixed(1) 
+    : "0.0";
+
+  // Formatează datele pentru grafic
   const chartData = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setUTCHours(0, 0, 0, 0);
-    d.setDate(d.getDate() - i);
-    
-    const summary = recentSummaries.find(s => s.date.getTime() === d.getTime());
-    
-    chartData.push({
-      date: d.toLocaleDateString("ro-RO", { day: "2-digit", month: "short" }),
-      views: summary?.totalViews || 0
-    });
+  if (groupType === "day") {
+    for (let i = daysToFetch - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setUTCHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - i);
+      
+      const summary = recentSummaries.find(s => s.date.getTime() === d.getTime());
+      
+      chartData.push({
+        date: d.toLocaleDateString("ro-RO", { day: "2-digit", month: "short" }),
+        views: summary?.totalViews || 0
+      });
+    }
+  } else {
+    // groupType === "month" - grupăm totalurile pe luni calendaristice
+    const current = new Date(startDate);
+    const end = new Date();
+    end.setUTCHours(0, 0, 0, 0);
+
+    while (current <= end) {
+      const year = current.getFullYear();
+      const month = current.getMonth();
+      
+      const monthSummaries = recentSummaries.filter(s => {
+        const d = new Date(s.date);
+        return d.getFullYear() === year && d.getMonth() === month;
+      });
+
+      const totalMonthViews = monthSummaries.reduce((sum, s) => sum + s.totalViews, 0);
+      
+      chartData.push({
+        date: current.toLocaleDateString("ro-RO", { month: "short", year: "numeric" }),
+        views: totalMonthViews
+      });
+
+      current.setMonth(current.getMonth() + 1);
+    }
   }
 
+  // Paginile de top pe intervalul selectat
   const topPagesGroups = await prisma.pageView.groupBy({
     by: ['url'],
     _count: { url: true },
-    where: { createdAt: { gte: sevenDaysAgo } },
+    where: { createdAt: { gte: startDate } },
     orderBy: { _count: { url: 'desc' } },
     take: 5
   });
@@ -100,6 +159,62 @@ export default async function DashboardPage() {
             Conectat ca <strong style={{ color: "#f8fafc" }}>{session.user?.email}</strong>
           </p>
         </div>
+
+        {/* ── Segmented Control pentru Intervalul de Timp ── */}
+        <div style={{ 
+          display: "flex", 
+          gap: "0.25rem", 
+          backgroundColor: "rgba(255,255,255,0.03)", 
+          padding: "0.25rem", 
+          borderRadius: "8px", 
+          border: "1px solid rgba(255,255,255,0.08)" 
+        }}>
+          <Link 
+            href="/dashboard?range=30d" 
+            style={{
+              padding: "0.5rem 1rem",
+              borderRadius: "6px",
+              fontSize: "0.85rem",
+              fontWeight: "600",
+              textDecoration: "none",
+              backgroundColor: range === "30d" ? "#38bdf8" : "transparent",
+              color: range === "30d" ? "#0f172a" : "#94a3b8",
+              transition: "all 0.2s ease"
+            }}
+          >
+            30 Zile
+          </Link>
+          <Link 
+            href="/dashboard?range=6m" 
+            style={{
+              padding: "0.5rem 1rem",
+              borderRadius: "6px",
+              fontSize: "0.85rem",
+              fontWeight: "600",
+              textDecoration: "none",
+              backgroundColor: range === "6m" ? "#38bdf8" : "transparent",
+              color: range === "6m" ? "#0f172a" : "#94a3b8",
+              transition: "all 0.2s ease"
+            }}
+          >
+            6 Luni
+          </Link>
+          <Link 
+            href="/dashboard?range=all" 
+            style={{
+              padding: "0.5rem 1rem",
+              borderRadius: "6px",
+              fontSize: "0.85rem",
+              fontWeight: "600",
+              textDecoration: "none",
+              backgroundColor: range === "all" ? "#38bdf8" : "transparent",
+              color: range === "all" ? "#0f172a" : "#94a3b8",
+              transition: "all 0.2s ease"
+            }}
+          >
+            Tot Istoricul
+          </Link>
+        </div>
       </header>
       
       {/* ── Secțiunea de Statistici (Analytics) ── */}
@@ -110,14 +225,14 @@ export default async function DashboardPage() {
         marginBottom: "2.5rem"
       }}>
         <div style={{ padding: "1.5rem", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h3 style={{ margin: "0 0 0.5rem 0", color: "#94a3b8", fontSize: "0.9rem" }}>Total Vizite (Azi)</h3>
-          <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#f8fafc" }}>{todayStats?.totalViews || 0}</p>
+          <h3 style={{ margin: "0 0 0.5rem 0", color: "#94a3b8", fontSize: "0.9rem" }}>Total Vizite ({rangeLabel})</h3>
+          <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#f8fafc" }}>{totalViews}</p>
         </div>
 
         <div style={{ padding: "1.5rem", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <div>
             <h3 style={{ margin: "0 0 0.5rem 0", color: "#94a3b8", fontSize: "0.9rem" }}>Intenții Programare</h3>
-            <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#34d399" }}>{calendlyClicksToday}</p>
+            <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#34d399" }}>{calendlyClicks}</p>
           </div>
           <p style={{ margin: "0.5rem 0 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>
             Conversie: <strong style={{ color: "#34d399" }}>{conversionRate}%</strong>
@@ -126,17 +241,17 @@ export default async function DashboardPage() {
         
         <div style={{ padding: "1.5rem", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)" }}>
           <h3 style={{ margin: "0 0 0.5rem 0", color: "#94a3b8", fontSize: "0.9rem" }}>Vizitatori Desktop</h3>
-          <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#38bdf8" }}>{todayStats?.desktopViews || 0}</p>
+          <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#38bdf8" }}>{desktopViews}</p>
         </div>
         
         <div style={{ padding: "1.5rem", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.1)" }}>
           <h3 style={{ margin: "0 0 0.5rem 0", color: "#94a3b8", fontSize: "0.9rem" }}>Vizitatori Mobil</h3>
-          <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#a78bfa" }}>{todayStats?.mobileViews || 0}</p>
+          <p style={{ margin: 0, fontSize: "2rem", fontWeight: "bold", color: "#a78bfa" }}>{mobileViews}</p>
         </div>
       </section>
 
       {/* ── Grafic de Trafic ── */}
-      <TrafficChart chartData={chartData} topPages={topPages} />
+      <TrafficChart chartData={chartData} topPages={topPages} rangeTitle={chartTitle} />
 
       {/* ── Secțiunea de Jurnalizare (Audit Logs) ── */}
       <section style={{ 

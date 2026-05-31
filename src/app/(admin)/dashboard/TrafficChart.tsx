@@ -24,9 +24,10 @@ type TopPage = {
 interface TrafficChartProps {
   chartData: ChartData[];
   topPages: TopPage[];
+  rangeTitle?: string;
 }
 
-export default function TrafficChart({ chartData, topPages }: TrafficChartProps) {
+export default function TrafficChart({ chartData, topPages, rangeTitle = "Trafic - Ultimele 7 Zile" }: TrafficChartProps) {
   return (
     <div style={{
       backgroundColor: "rgba(255,255,255,0.03)",
@@ -35,7 +36,7 @@ export default function TrafficChart({ chartData, topPages }: TrafficChartProps)
       padding: "1.5rem",
       marginBottom: "2.5rem",
     }}>
-      <h2 style={{ margin: "0 0 1rem 0", fontSize: "1.2rem", fontWeight: "600" }}>Trafic - Ultimele 7 Zile</h2>
+      <h2 style={{ margin: "0 0 1rem 0", fontSize: "1.2rem", fontWeight: "600" }}>{rangeTitle}</h2>
       
       <div style={{ width: "100%", height: 350 }}>
         <ResponsiveContainer>
